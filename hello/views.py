@@ -10,8 +10,8 @@ def index(request):
     # return HttpResponse('Hello from Python!')
     r = requests.get('http://httpbin.org/status/418')
     print(r.text)
-    return HttpResponse('<pre>' + r.text + '</pre>')
-    #return render(request, "index.html")
+    #return HttpResponse('<pre>' + r.text + '</pre>')
+    return render(request, "index.html")
 
 
 def db(request):
