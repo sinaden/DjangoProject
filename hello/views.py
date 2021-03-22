@@ -13,6 +13,11 @@ def index(request):
     #return HttpResponse('<pre>' + r.text + '</pre>')
     return render(request, "index.html")
 
+def v1(request):
+
+    return HttpResponse('<h1> Sina Denmark </h1>')
+
+
 
 def db(request):
 
