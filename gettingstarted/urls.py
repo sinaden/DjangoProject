@@ -18,5 +18,6 @@ urlpatterns = [
     path("", hello.views.index, name="index"),
     path("db/", hello.views.db, name="db"),
     path("admin/", admin.site.urls),
-    path("v1/", hello.views.v1, name="v one"),
+    path("v1/<int:id>", hello.views.v1, name="v one"),
+    path("create/", hello.views.create, name="create"),
 ]
