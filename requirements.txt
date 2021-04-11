@@ -4,3 +4,4 @@ django-heroku
 requests
 pyGithub
 pandas
+crispy_forms
