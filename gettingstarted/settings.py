@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "hello",
+    "register",
+    "crispy_forms"
 ]
 
 MIDDLEWARE = [
@@ -120,5 +122,10 @@ USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = "/static/"
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+LOGIN_REDIRECT_URL = "/ma"
+LOGOUT_REDIRECT_URL = "/"
 
 django_heroku.settings(locals())

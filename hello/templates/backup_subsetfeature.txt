@@ -1,0 +1,122 @@
+
+
+
+{% extends "base.html" %}
+<!--{% load static %}-->
+
+{% load crispy_forms_tags %}
+
+{%  block content %} 
+
+<style>
+  .form-control{
+    max-width: 400px;
+  }
+
+  textarea.form-control{
+      height: 100px;
+  }
+
+  textarea {
+	width:100%;
+	box-sizing:border-box;
+	display:block;
+	max-width:100%;
+	line-height:1.5;
+	padding:15px 15px 30px;
+	border-radius:3px;
+	border:1px solid #F7E98D;
+	font:13px Tahoma, cursive;
+	transition:box-shadow 0.5s ease;
+	box-shadow:0 4px 6px rgba(0,0,0,0.1);
+	background:linear-gradient(#F9EFAF, #F7E98D);
+	background:-o-linear-gradient(#F9EFAF, #F7E98D);
+	background:-ms-linear-gradient(#F9EFAF, #F7E98D);
+	background:-moz-linear-gradient(#F9EFAF, #F7E98D);
+	background:-webkit-linear-gradient(#F9EFAF, #F7E98D);
+}
+
+  label[for*="id_title"] {
+    font-size: 25px;
+  }
+</style>
+
+<div class="container">
+    <br>
+  <hr>
+  <div class="row">
+    <div class="col-md-12">
+      <h3><span class="glyphicon glyphicon-cloud"></span> Subset & Features </h3> 
+      <!-- <form method="POST" class="form-group">
+        {% csrf_token %} 
+        {{form|crispy}}
+        <button type="submit" class="btn btn-success">Register</button> -->
+        <form method="POST">
+            <div id="forms">
+                {% csrf_token %}
+                {{ form.as_p }}
+            </div>
+            <button id="add-another">add another</button>
+            <button id="add-feature" style="background-color: cadetblue;">add feature</button>
+
+            <input type="submit" />
+        </form>
+    <!-- </form> -->
+ 
+  </div> <!-- row -->
+   <div class="alert alert-light text-center" role="alert">
+    Please do work1 through the Getting Started guide.
+  </div>
+</div>
+
+<script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
+
+<script type="text/javascript">
+    let form_count = Number($("[name=extra_field_count]").val());
+    // get extra form count so we know what index to use for the next item.
+
+    $("#add-another").click(function() {
+        form_count ++;
+
+        let element = $('<input type="text"/>');
+       // element.attr('name', 'extra_field_' + form_count);
+       element.attr('name', 'subset_' + form_count);
+       console.log("sub");
+        $("#forms").append(element);
+        // build element and append it to our forms container
+        
+        $("[name=extra_field_count]").val(form_count);
+        // increment form count so our view knows to populate 
+        // that many fields for validation
+    })
+
+    let form_f_count = Number($("[name=extra_feature_count]").val());
+
+
+    $("#add-feature").click(function() {
+        form_f_count ++;
+
+        let element = $('<input type="text"/>');
+       // element.attr('name', 'extra_field_' + form_count);
+       element.attr('name', 'feature_' + form_f_count);
+        $("#forms").append(element);
+        // build element and append it to our forms container
+        
+        $("[name=extra_feature_count]").val(form_f_count);
+        // increment form count so our view knows to populate 
+        // that many fields for validation
+    })
+
+
+        $(document).ready(function() {
+            autosize(document.getElementById("id_motivation_1"));
+
+            //alert("fff");
+
+        });
+    
+</script>
+
+
+{% endblock %}
+
