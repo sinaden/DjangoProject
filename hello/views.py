@@ -1317,7 +1317,8 @@ def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
     # change it to a dynamic input later
     repo = g.get_repo("sinaden/" + repo_name)
 
-    with open("assets\\"+file_name, 'r') as file:
+    path_ = "assets\{file_name}".format(file_name = file_name)
+    with open(path, 'r') as file:
         content = file.read()
     #print("checkpoint no. 1")
     all_files = []
