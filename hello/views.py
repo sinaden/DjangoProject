@@ -710,7 +710,8 @@ def check_repo_launch_ability(request):
             except UnknownObjectException as e:
                 print(xml_file, e.data['message'])
                 if xml_file == "version_provenance.xml":
-                    upload_to_github("version_provenance.xml", repo_name)
+                    download_from_github("xml/example/version_provenance.xml", repo_name)
+                    #upload_to_github("version_provenance.xml", repo_name)
                 else:
                     miss.append(value)
 
@@ -1062,7 +1063,7 @@ def new_datasheet(request):
     return render(request, "new_datasheet.html",{ "form":form})
 
 def new_about(request, repo_name):
-    upload_to_github("about.xml", repo_name)
+    download_from_github("xml/example/about.xml", repo_name)
     user = request.user 
     return render(request, "new_repository.html", {"name" : user.get_username(), "message": "About has been successfully created", "repo_name": repo_name})
 
@@ -1314,22 +1315,24 @@ def upload_images_to_github(file_name, repo_name, target_path):
         repo.create_file(git_file, "creating a new file:" + file_name, binary, branch="main")
         print(git_file + ' CREATED')
 
+def download_from_github(path, repo_name):
+    g = Github(settings.GITHUN_TOKEN)
+    # change it to a dynamic input later
+    repo = g.get_repo("sinaden/" + repo_name)
+
+    contents = repo.get_contents(path)
+    conn = contents.decoded_content
+
+    path2 = path.replace("example","target")
+    repo.create_file(path2, "commit", conn)
+
 
 def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
     g = Github(settings.GITHUN_TOKEN)
     # change it to a dynamic input later
     repo = g.get_repo("sinaden/" + repo_name)
 
-    path = "staticfiles\\assets\\{file_name}".format(file_name = file_name)
-
-    this_dir = pathlib.Path().absolute()
-    print(this_dir)
-
-    p = pathlib.Path()
-
-    for i in p.glob('**/staticfiles/**/*'):
-        print(this_dir, '\\', i)
-
+    path = "assets\\{file_name}".format(file_name = file_name)
 
     with open(path, 'r') as file:
         content = file.read()
