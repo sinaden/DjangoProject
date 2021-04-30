@@ -1327,9 +1327,8 @@ def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
 
     p = pathlib.Path()
 
-    for i in p.glob('**/*'):
-        if i.is_dir():
-            print(this_dir, '\\', i)
+    for i in p.glob('**/staticfiles/**'):
+        print(this_dir, '\\', i)
 
 
     with open(path, 'r') as file:
