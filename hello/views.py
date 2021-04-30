@@ -33,6 +33,9 @@ import base64
 
 from django import forms
 
+import pathlib
+
+
 
 
 # Create your views here.
@@ -1318,6 +1321,17 @@ def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
     repo = g.get_repo("sinaden/" + repo_name)
 
     path = "assets\{file_name}".format(file_name = file_name)
+
+    this_dir = pathlib.Path().absolute()
+    print(this_dir)
+
+    p = pathlib.Path()
+
+    for i in p.glob('**/*'):
+        if i.is_dir():
+            print(this_dir, '\\', i)
+
+
     with open(path, 'r') as file:
         content = file.read()
     #print("checkpoint no. 1")
