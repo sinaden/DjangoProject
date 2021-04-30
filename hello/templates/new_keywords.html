@@ -58,7 +58,7 @@
   <hr>
   <div class="row">
     <div class="col-md-12">
-      <h3><span class="glyphicon glyphicon-cloud"></span> Subset & Features </h3> 
+      <h3><span class="glyphicon glyphicon-cloud"></span> Keywords </h3> 
       <!-- 
         
         <form method="POST" class="form-group">
@@ -69,9 +69,7 @@
       -->
         <form method="POST">
             
-            <button id="add-another" name="subset_submission"  class="btn btn-lg btn-default" >add subset</button>
-
-            <button id="add-feature" name="feature_submission" class="btn btn-lg btn-success" style="background-color: cadetblue;">add feature</button>
+            <button id="add-another" name="keyword_submission"  class="btn btn-lg btn-default" >add Keyword</button>
 
             <div id="forms">
                 {% csrf_token %}
@@ -119,16 +117,6 @@
 
 <script type="text/javascript">
     let form_count = Number($("[name=extra_field_count]").val());
-    // get extra form count so we know what index to use for the next item.
-
-  //  $('#form_id').submit(function() {
-  //    alert("error");
-  //    var idLists = $("input[id$='_1']");
-  //    if (idLists.size() != 0) {
-  //          alert("error");
-  //          return false;
-  //    }
-  //  });
 
 
     $("#add-another").click(function() { 
@@ -138,7 +126,7 @@
         form_count ++;
               let element = $('<input type="text"/>');
             // element.attr('name', 'extra_field_' + form_count);
-            element.attr('name', 'subset_' + form_count);
+            element.attr('name', 'keyword_' + form_count);
             console.log("sub");
           //  $("#forms").append(element);
               // build element and append it to our forms container
@@ -148,23 +136,6 @@
               // that many fields for validation
   
         
-    })
-
-    let form_f_count = Number($("[name=extra_ft_count]").val());
-
-
-    $("#add-feature").click(function() {
-        form_f_count ++;
-
-        let element = $('<input type="text"/>');
-       // element.attr('name', 'extra_field_' + form_count);
-       element.attr('name', 'feature_' + form_f_count);
-       // $("#forms").append(element);
-        // build element and append it to our forms container
-        
-        $("[name=extra_ft_count]").val(form_f_count);
-        // increment form count so our view knows to populate 
-        // that many fields for validation
     })
 
 

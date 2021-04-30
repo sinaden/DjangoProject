@@ -128,4 +128,6 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 LOGIN_REDIRECT_URL = "/ma"
 LOGOUT_REDIRECT_URL = "/"
 
+GITHUN_TOKEN = "ba98060c376542a75c234171d9576de043534a84"
+
 django_heroku.settings(locals())

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+<!--{% load static %}-->
+
+
+ 
+{% block content %}
+<style>
+.cntr {
+  display: flex;
+  justify-content: center;
+}
+</style>
+<!--
+<div class="jumbotron text-center">
+  <div class="container"> 
+    <h1 style="margin-bottom: 40px;font-size: 45px;">Welcome to dashboard {{name}}</h1>
+    <a type="button" class="btn btn-lg btn-default" href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Create new repository</a>
+    <a type="button" class="btn btn-lg btn-primary" href="/owned/"><span class="glyphicon glyphicon-eye-open"></span> Owned repositoties</a>
+    <a type="button" class="btn btn-lg btn-info" href="/watch/"><span class="glyphicon glyphicon-search"></span> Watch repos</a>
+
+      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Name the new repository.</h4>
+            </div>
+            <div class="modal-body">
+              {% csrf_token %}
+              <input type="text" id="repo_name" name="repo_name" class="form-control" style="max-width: 300px;" placeholder="Type your project's title"> <br>
+              <span id="validationMessage" style="display: none; color: rgb(218, 0, 0);">Name already exists</span>
+              
+              <div class="alert alert-danger" role="alert"  style="display: none">
+                Name already exists
+              </div>
+               
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="saveModal">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+</div>
+--> 
+<div class="container">
+    {% if message %}
+    <div class="alert alert-success text-center" role="alert">
+        {{message}}      
+    </div>
+    {% endif%} 
+  <hr>
+  <div class="row">
+    {% for repo in repo_list %}
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #98f3ce; border: 0px; padding-bottom: 20px;">
+                <h3 class="panel-title" style="display: inline;  font-weight: bold; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">Repo: {{repo}}
+                  <a type="button" class="btn btn-sm btn-default" style="float:right;" href="{{url}}{{repo}}" target="_blank"><span class="glyphicon glyphicon-edit"></span> View website</a> </h3>
+                </div>
+                <div class="panel-body" style="background-color: #ceffeb;">
+                    <div class="text-center">
+                        <!--<p style="font-size: 16px;">Repo: {{repo}}</p>-->
+                        
+                        <br>
+                    <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/edit-datasheet/{{repo}}"><span class="glyphicon glyphicon-edit" ></span> Edit datasheet</a>
+                    <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/edit-subsetfeature/{{repo}}"><span class="glyphicon glyphicon-edit"></span> Edit features</a>
+                    <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/new-keywords/{{repo}}/1"><span class="glyphicon glyphicon-edit"></span> Edit keywords</a>
+
+                  </div>
+
+                </div>
+            </div>
+        </div>
+        
+    {% endfor %}
+    
+    
+
+    
+
+  </div> <!-- row -->
+   <div class="alert alert-light text-center" role="alert">
+    Please make sure the .
+  </div>
+  <!-- Button trigger modal 
+  <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+    Launch demo modal
+  </button>-->
+
+
+
+</div>
+
+<script type="text/javascript">
+   
+
+</script>
+{% endblock %}

@@ -5,40 +5,124 @@
 
 
 <div class="container">
+  <span style="visibility: hidden;" id="_repo_name">{{repo_name}}</span>
   <div class="alert alert-light text-center" role="alert">
     The {{repo_name}} repository made by {{name}},
     Please fill in the following datasheets
     
   </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-cloud"></span> Datasheet </h3> <h4> Subjective Description of the Dataset</h4>
-      <p>The quastionare contains an overal description of the state of the data. This is for preventing biased models, more transparency, helping with creaing synthetic data and many more advantages. </p>
-      <ul style="height: 110px;">
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/python-getting-started">Heroku Button</a> on the repository.</li>
-        <li>When Heroku received the source code, it fetched all the dependencies in <a href="https://github.com/heroku/python-getting-started/blob/main/requirements.txt">requirements.txt</a>, creating a deployable slug.</li>
-      </ul>
-      <a type="button" class="btn btn-lg btn-default" href="/new-datasheet/{{repo_name}}"><span class="glyphicon glyphicon-plus"></span> Create </a>
-    </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-education"></span> Subsets & Features </h3> <h4> Technical Description of the Dataset</h4>
-      <p>The architecture of the dataset, each data is consisted of set of variables knowing the variables and their sources helps with transparency and also speeding up development of models before the data is accisible.  </p>
+  {% if message %}
+  <div class="alert alert-success text-center" role="alert">
+      {{message}}      
+  </div>
+  {% endif%} 
+  {% csrf_token %}
 
-      <ul style="height: 110px;">
-        <li>If you are following the <a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started</a> guide, then please head back to the tutorial and follow the next steps!</li>
-        <li>If you deployed this app by deploying the Heroku Button, then in a command line shell, run:</li>
-        <br>
+  <div class="container">
+    <div style="font-size: medium; background-color: rgba(206, 255, 235, 0.768); padding: 6px; padding-left: 30px; padding-right: 30px; border-radius: 17px;">
+      <h3 style="color: darkcyan;"> Show the static website </h3> 
+      <p id="web_desc" >The website representation of this repository could be accessed when all the four main forms have been filled, meaning the Purpose datasheet, subset and features, about form. 
+        If you ommit uploading two main figures for the datasheets a placeholder image would be used in the website. <br>
+        <b>It could take up to 5 minutes from the completion of the repository until the website is fully created.</b> <br>
+
+        <a id="website_btn" type="button" class="btn btn-lg btn-info disabled" style=" margin-top: 20px; margin-bottom: 20px; margin-right: 50px;" target="_blank"><span class="glyphicon glyphicon-plus"></span> Show </a>
+      </p>
         
-
-      </ul>
-      <a type="button" class="btn btn-lg btn-default" href="/new-subsetfeature/{{repo_name}}" ><span class="glyphicon glyphicon-plus"></span> Create </a>
+        
       
     </div>
- 
+    
+    <hr>
+  
+
+  <div class="row">
+    
+
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-cloud"></span> Datasheet </h3> <h4> Subjective Description of the Dataset </h4>
+      <p>The quastionare contains an overal description of the state of the data. This is for preventing biased models, more transparency, helping with creaing synthetic data and many more advantages. </p>
+      
+      <a type="button" class="btn btn-lg btn-default" style="float:right;" href="/new-datasheet/{{repo_name}}"><span class="glyphicon glyphicon-plus"></span> Create </a>
+    </div>
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-education"></span> Subsets & Features </h3> <h4> Subsets and Features of the Dataset</h4>
+      <p>The architecture of the dataset, each data is consisted of set of variables knowing the variables and their sources helps with transparency and also speeding up development of models before the data is accisible.  </p>
+
+      
+      <a type="button" class="btn btn-lg btn-default" style="float:right;" href="/new-feature/{{repo_name}}"><span class="glyphicon glyphicon-plus"></span> Create </a>
+      
+    </div>
+
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-camera"></span> Figures </h3> <h4> Figures for static website</h4>
+      <p>Here you can uploaded images which will be displayed at the website representation of the datasheets. </p>
+      
+      <a type="button" class="btn btn-lg btn-default " style="float:right;" href="/new-figures/{{repo_name}}"><span class="glyphicon glyphicon-plus"></span> Create </a>
+    </div>
+
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-bookmark"></span> Keyword </h3> <h4> Keywords of the Dataset </h4>
+      <p>The keywords used in the dataset that needs to be documented with their source and explanation. </p>
+      
+      <a type="button" class="btn btn-lg btn-default" style="float:right;" href="/new-keywords/{{repo_name}}"><span class="glyphicon glyphicon-plus"></span> Create </a>
+    </div>
+
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-user"></span> About </h3> <h4> About the creators </h4>
+      <p>Name of the people who were involved in answering the datasheets and their contact info. </p>
+      
+      <a type="button" class="btn btn-lg btn-default" style="float:right;" href="/new-about/{{repo_name}}" ><span class="glyphicon glyphicon-plus"></span> Create </a>
+    </div>
+
   </div> <!-- row -->
-   <div class="alert alert-light text-center" role="alert">
+   <hr>
+  <div class="alert alert-light text-center" role="alert">
     Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
   </div>
 </div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.alert').hide();
+     // autosize(document.getElementById("id_motivation_1"));
+      //alert("fff");
+      repo_name_var = $('#_repo_name').text();
+      console.log(repo_name_var);
+      $.ajax({
+        url: "/check-repo-launch/",
+        type: 'POST',
+        data: {
+            repo_name : repo_name_var,
+            csrfmiddlewaretoken:  $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(data) {
+          console.log("success"); 
+          console.log(data.message)
+          if (data.message === "missing_items") {
+           // $('.alert').show();
+           var mi = JSON.parse(data.missing_items);
+           console.log(typeof (mi));
+           
+           
+           $("#web_desc").append("<p> <b> Currently the following forms are missing, if you add them you will be able to view the website. </b> </p>");
+          for (i in mi) {
+            console.log(mi[i]);
+            $("#web_desc").append("<p> • "+mi[i]+ "</p>");
+          }
+          }else if (data.message == "launch_ready"){           
+           //console.log(data.url);
+           $("#website_btn").prop("href", data.url)
+           $("#website_btn").removeClass('disabled');
+          }
+          console.dir(data);
+          console.log(data);
+          }
+    })
+
+
+    $('.loader').hide();
+});
+
+</script>
 {% endblock %}

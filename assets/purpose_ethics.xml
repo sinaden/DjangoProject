@@ -1,6 +1,6 @@
 <!-- Edit the answers below to describe your dataset -->
 <!-- Do not change questions as these are defined by the MAIDS specification -->
-<root name="PURPOSE">
+<root name="QUESTIONNAIRE">
     <questionnaire>
         <category_1>
             <name>Motivation</name>

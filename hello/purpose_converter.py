@@ -33,6 +33,6 @@ class PurposeConverter():
     
     def save(self):
         tree = ET.ElementTree(self.main_root)
-        file_name = "purpose_{title}.xml".format(title = self.name)
+        file_name = "questionnaire.xml".format(title = "self.name")
         tree.write("assets\\" + file_name)
         return file_name
