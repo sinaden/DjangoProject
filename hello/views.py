@@ -1320,7 +1320,7 @@ def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
     # change it to a dynamic input later
     repo = g.get_repo("sinaden/" + repo_name)
 
-    path = "assets\{file_name}".format(file_name = file_name)
+    path = "staticfiles\assets\{file_name}".format(file_name = file_name)
 
     this_dir = pathlib.Path().absolute()
     print(this_dir)
