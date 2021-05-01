@@ -9,45 +9,38 @@
   display: flex;
   justify-content: center;
 }
+
+  
+  .footer {
+        background-image: url(https://raw.githubusercontent.com/sinaden/hc_maids/main/banner.jpg);
+        background-position: 50% 100%;
+        color: rgb(22, 59, 34);
+        padding-top: 30px;
+        padding-bottom: 130px;
+
+        position: relative;
+        right: 0;
+        bottom:0;
+        left:0;
+
+    }
+
+    #owned_repos_container{
+      padding-bottom: 100px;
+    }
 </style>
-<!--
+
 <div class="jumbotron text-center">
-  <div class="container"> 
-    <h1 style="margin-bottom: 40px;font-size: 45px;">Welcome to dashboard {{name}}</h1>
-    <a type="button" class="btn btn-lg btn-default" href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Create new repository</a>
-    <a type="button" class="btn btn-lg btn-primary" href="/owned/"><span class="glyphicon glyphicon-eye-open"></span> Owned repositoties</a>
-    <a type="button" class="btn btn-lg btn-info" href="/watch/"><span class="glyphicon glyphicon-search"></span> Watch repos</a>
-
-      <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Name the new repository.</h4>
-            </div>
-            <div class="modal-body">
-              {% csrf_token %}
-              <input type="text" id="repo_name" name="repo_name" class="form-control" style="max-width: 300px;" placeholder="Type your project's title"> <br>
-              <span id="validationMessage" style="display: none; color: rgb(218, 0, 0);">Name already exists</span>
-              
-              <div class="alert alert-danger" role="alert"  style="display: none">
-                Name already exists
-              </div>
-               
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="saveModal">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+  <div class="container">
+    <!--<a href="/" class="lang-logo">
+      <img src="{% static 'lang-logo.png'%}">
+    </a>-->
+    <h1 style="margin-bottom: 40px;font-size: 45px;">Edit Your Repositories</h1>
+    
 
   </div>
 </div>
---> 
-<div class="container">
+<div class="container" id="owned_repos_container">
     {% if message %}
     <div class="alert alert-success text-center" role="alert">
         {{message}}      
@@ -86,10 +79,7 @@
 
     
 
-  </div> <!-- row -->
-   <div class="alert alert-light text-center" role="alert">
-    Please make sure the .
-  </div>
+  </div> <!-- row -->   
   <!-- Button trigger modal 
   <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
     Launch demo modal

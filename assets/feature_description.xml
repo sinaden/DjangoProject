@@ -36,39 +36,17 @@
   <Subset_Feature_Dataset>
     <Subset_1>
       <ID>1</ID>
-      <Name>subset1</Name>
-      <LastUpdate>12.10.2020</LastUpdate>
-      <Modality>int</Modality>
+      <Name>test</Name>
+      <LastUpdate />
+      <Modality />
       <Format />
       <Size />
       <ParentID />
-      <Purpose>Test</Purpose>
+      <Purpose />
       <Link />
       <Covmat />
       <Modsys />
-      <Features>
-        <Feature_1>
-          <ID>1</ID>
-          <Subset>1</Subset>
-          <Introduction>MADS_data</Introduction>
-          <Name>sex</Name>
-          <Values>M / K</Values>
-          <Meaning_NA_NULL_NONE_OTHER>Not possible in format</Meaning_NA_NULL_NONE_OTHER>
-          <Meaning_Zero />
-          <Meaning_BlankVoid />
-          <Sparsity />
-          <Mean />
-          <Std />
-          <Modality />
-          <Median />
-          <IQR />
-          <ParentIDs>14</ParentIDs>
-          <Unit>4</Unit>
-          <Definition>gender</Definition>
-          <Purpose>Gender could be associated to BSI</Purpose>
-          <Encoding>18</Encoding>
-        </Feature_1>
-      </Features>
+      <Features />
     </Subset_1>
   </Subset_Feature_Dataset>
 </root>

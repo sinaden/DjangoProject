@@ -12,7 +12,8 @@
 
   <style type="text/css">
     .jumbotron {
-        background: #beffe4;
+        background-image: url(https://raw.githubusercontent.com/sinaden/hc_maids/main/banner.jpg);
+        background-position: 50% 50%;
         color: rgb(22, 59, 34);
         padding-bottom: 80px
     }
@@ -54,6 +55,23 @@
         max-width: 100%
     }
 
+    .footer {
+        background-image: url(https://raw.githubusercontent.com/sinaden/hc_maids/main/banner.jpg);
+        background-position: 50% 100%;
+        color: rgb(22, 59, 34);
+        padding-top: 10px;
+        padding-bottom: 50px;
+
+        position:fixed;
+        right: 0;
+        bottom:0;
+        left:0;
+
+    }
+
+    .longcontainer {
+    margin-bottom: 130px;
+    }
 
   </style>
 </head>
@@ -124,5 +142,25 @@
                        Magnam quam vero sapiente id. Illum accusantium, dolorum tenetur nemo rerum reiciendis quos cum nobis alias, 
                        qui facilis quia facere, dicta aperiam! dolorum ten             
             {% endif %}
+            
+
 </body>
+
+<div class="mt-5 pt-5 pb-5 footer" style="height: 100px;">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 col-xs-12 about-company">
+        <p><a href="#"><i class="fa fa-facebook-square mr-1"></i></a><a href="#"><i class="fa fa-linkedin-square"></i></a></p>
+      </div>
+      
+      
+    </div>
+    <div class="row mt-5">
+      <div class="col copyright">
+        <p class=""><small class="text-white-50">© 2019. All Rights Reserved.</small></p>
+      </div>
+    </div>
+  </div>
+  </div>
+
 </html>

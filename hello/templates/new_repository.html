@@ -3,8 +3,44 @@
 
 {% block content %}
 
+<style>
+  
+  .footer {
+        background-image: url(https://raw.githubusercontent.com/sinaden/hc_maids/main/banner.jpg);
+        background-position: 50% 100%;
+        color: rgb(22, 59, 34);
+        padding-top: 30px;
+        padding-bottom: 130px;
 
-<div class="container">
+        position: relative;
+        right: 0;
+        bottom:0;
+        left:0;
+
+    }
+
+    .headline{
+      font-size: medium; 
+      background-image: url(https://raw.githubusercontent.com/sinaden/hc_maids/main/download2.png);
+      
+      padding: 6px; padding-left: 30px; padding-right: 30px; border-radius: 17px;
+    }
+
+</style>
+
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <!--<a href="/" class="lang-logo">
+      <img src="{% static 'lang-logo.png'%}">
+    </a>-->
+    <h1 style="margin-bottom: 40px;font-size: 45px;">New Repository</h1>
+    
+
+  </div>
+</div>
+
+<div class="container" style="margin-bottom: 10px;">
   <span style="visibility: hidden;" id="_repo_name">{{repo_name}}</span>
   <div class="alert alert-light text-center" role="alert">
     The {{repo_name}} repository made by {{name}},
@@ -19,7 +55,8 @@
   {% csrf_token %}
 
   <div class="container">
-    <div style="font-size: medium; background-color: rgba(206, 255, 235, 0.768); padding: 6px; padding-left: 30px; padding-right: 30px; border-radius: 17px;">
+    <!--<div style="font-size: medium; background-color: rgba(206, 255, 235, 0.768); padding: 6px; padding-left: 30px; padding-right: 30px; border-radius: 17px;">-->
+      <div class="headline">
       <h3 style="color: darkcyan;"> Show the static website </h3> 
       <p id="web_desc" >The website representation of this repository could be accessed when all the four main forms have been filled, meaning the Purpose datasheet, subset and features, about form. 
         If you ommit uploading two main figures for the datasheets a placeholder image would be used in the website. <br>
@@ -73,13 +110,13 @@
       
       <a type="button" class="btn btn-lg btn-default" style="float:right;" href="/new-about/{{repo_name}}" ><span class="glyphicon glyphicon-plus"></span> Create </a>
     </div>
-
+    
   </div> <!-- row -->
    <hr>
   <div class="alert alert-light text-center" role="alert">
     Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
   </div>
-</div>
+  </div>
 </div>
 
 <script type="text/javascript">

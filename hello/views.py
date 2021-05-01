@@ -120,7 +120,10 @@ def edit_datasheet_repo(request, repo_name):
         print("-------Start--------")
         print("fetch the form from github")
         datasheet_file_name = "questionnaire.xml"
-        init_values = fetch_remote_datasheet(repo_name, datasheet_file_name)
+        try:
+            init_values = fetch_remote_datasheet(repo_name, datasheet_file_name)
+        except:
+            return new_datasheet_name(request, repo_name)
         form = PurposeForm(initial= init_values)
         print("-------Succeeded--------")
 
@@ -370,7 +373,10 @@ def edit_subsetfeature_repo(request, repo_name):
         print("fetch the form from github")
         #file_name = "subset_feature_" + user.get_username() +".xml"
         file_name = "feature_description.xml"
-        init_values = fetch_remote_feature(repo_name, file_name)
+        try:
+            init_values = fetch_remote_feature(repo_name, file_name)
+        except:
+            return new_feature(request, repo_name)
         #form = PurposeForm(initial= init_values)
         print("-------Succeeded--------")
 
@@ -643,28 +649,32 @@ def fetch_remote_about(repo_name, file_name):
 
     la = list(au_ans)
 
+    
+
     a_str = ""
 
-    for ax in la:
-        a_str += ax.find("firstnames").text
-        a_str += " "
-        a_str += ax.find("lastname").text
-        a_str += ", "
+    if la:
+        for ax in la:
+            a_str += str(ax.find("firstnames").text or "")
+            a_str += " "
+            a_str += str(ax.find("lastname").text or "")
+            a_str += ", "
 
-    # remove the last comma and the rest of it
-    a_str = a_str.rsplit(',', 1)[0]
+        # remove the last comma and the rest of it
+        a_str = a_str.rsplit(',', 1)[0]
     
     fields['authors'] = a_str
     
+    
 
     abans = ghxml.find('abstract').find('answer')
-    fields['abstract'] = abans.text 
+    fields['abstract'] = abans.text or ""
     
     re_main = ghxml.find('research').find('main').find('answer')
-    fields['research_main'] = re_main.text 
+    fields['research_main'] = re_main.text or ""
 
     re_sec = ghxml.find('research').find('secondary').find('answer')
-    fields['research_secondary']= re_sec.text
+    fields['research_secondary']= re_sec.text or ""
 
 
     return fields
@@ -1128,6 +1138,11 @@ def new_datasheet(request):
 
 def new_about(request, repo_name, is_edit = False):
 
+    print("check if is_edit is workin:")
+
+
+    print(is_edit)
+
     if request.method == 'POST': 
         user = request.user 
 
@@ -1143,8 +1158,7 @@ def new_about(request, repo_name, is_edit = False):
             modify_about_file( "xml/target/about.xml",fields, repo_name)
 
             print(".................::::::::::::::::: DONE uploading to github :::::::::::::::....................")
-            
-            return new_repo_name(request, repo_name)
+                    
             
             if not is_edit:
                 return new_repo_name(request, repo_name)
@@ -1162,6 +1176,7 @@ def new_about(request, repo_name, is_edit = False):
 
             form = AboutForm(initial= init_values)
             print("-------Succeeded--------")
+    
 
     return render(request, "new_about.html",{ "form":form, "repo_name":repo_name})
 
@@ -1281,7 +1296,10 @@ def new_keywords(request, repo_name, is_edit = False):
             print("fetch the form from github")
             #file_name = "subset_feature_" + user.get_username() +".xml"
             file_name = "keyword_definitions.xml"
-            init_values = fetch_remote_keyword(repo_name, file_name)
+            try:
+                init_values = fetch_remote_keyword(repo_name, file_name)
+            except:
+                return new_keywords(request, repo_name)
             #form = PurposeForm(initial= init_values)
             print("-------Succeeded--------")
 

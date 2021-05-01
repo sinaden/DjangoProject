@@ -34,7 +34,7 @@ li {
    <!-- <p>Manage datasheets, create new ones, track and edit. </p>-->
     <a type="button" class="btn btn-lg btn-default" href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Create new repository</a>
     <a type="button" class="btn btn-lg btn-primary" href="/owned/"><span class="glyphicon glyphicon-eye-open"></span> Owned repositoties</a>
-    <a type="button" class="btn btn-lg btn-info" href="/watch/"><span class="glyphicon glyphicon-search"></span> Watch repos</a>
+   <!-- <a type="button" class="btn btn-lg btn-info" href="/watch/"><span class="glyphicon glyphicon-search"></span> Watch repos</a>-->
 
       <!-- Modal -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -42,7 +42,7 @@ li {
           <div class="modal-content">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="myModalLabel">Name the new repository.</h4>
+              <h4 class="modal-title" id="myModalLabel">Name the new repository. (Cannot contain white space)</h4>
             </div>
             <div class="modal-body">
               {% csrf_token %}
@@ -51,6 +51,9 @@ li {
               
               <div class="alert alert-danger" role="alert"  style="display: none">
                 Name already exists
+              </div>
+              <div id="space_alert" class="alert alert-danger" role="alert"  style="display: none">
+                Name cannot contain white space
               </div>
               <div class="center"><div class="loader"></div></div>
               
@@ -72,19 +75,20 @@ li {
   
   <hr>
   <div class="row">
-    <div class="col-md-4">
-      <h3><span class="glyphicon glyphicon-cloud"></span> How this web app works</h3>
-      <ul>
-        <li>This project was made to ease the creation of datasheet and data descriptions for datasets used in medical research, especifically machine learning datasets.</li>
+    <div class="col-md-6">
+      <h3> How this web app works</h3>
+      
+        <p>This project was made to ease the creation of datasheet and data descriptions for datasets used in medical research, especifically machine learning datasets.</p>
 
         
-        <li>You can create these datasheet using forms and templates provided in this system. (You will access the dashboard after creating a repo). You can also edit the owned repositories by clicking on the middle button.</li>
-      </ul>
+        <p>You can create these datasheet using forms and templates provided in this system. (You will access the dashboard after creating a repo). You can also edit the owned repositories by clicking on the middle button.</p>
+      
     </div>
-    <div class="col-md-4">
-      <h3><span class="glyphicon glyphicon-education"></span> Structure of repositories</h3>
+    <div class="col-md-6">
+      <h3><span ></span> Structure of repositories</h3>
+      <p>When a new repository gets created the system immediately connect it to a central github account where all the repositories reside. Every repo is compiresed of the following:</p>
+
       <ul>
-        <li>When a new repository gets created the system immediately connect it to a central github account where all the repositories reside. Every repo is compiresed of the following:</li>
         <br>
         <li>1. Purpose datasheet</li>
         <li>2. Subsets and Features datasheet</li>
@@ -94,16 +98,6 @@ li {
         </ul>
       </ul>
       
-    </div>
-
-    <div class="col-md-4">
-        <h3><span class="glyphicon glyphicon-erase"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-python">Getting Started with Python on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/django-app-configuration">Configuring Django Apps for Heroku</a></li>
-      </ul>
     </div>
 
   </div> <!-- row -->
@@ -167,27 +161,39 @@ li {
   $("#saveModal").click(function(event){
     console.log(event);
     console.log($("#repo_name").val());
-    var repo_name_var = $("#repo_name").val();
-    $.ajax({
-        url: "/check-repo-name/",
-        type: 'POST',
-        data: {
-            repo_name : $("#repo_name").val(),
-            csrfmiddlewaretoken:  $('input[name=csrfmiddlewaretoken]').val()
-        },
-        success: function(data) {
-          console.log("success"); 
-          if (data.message === "Repo already exists") {
-            $('.alert').show();
-            window.location = '/new/'+repo_name_var;
-          }else{
-            $('.alert').hide();
-            create_repo_and_blog(repo_name_var);
-          }
-          console.dir(data);
-          console.log(data);
-          }
-    })
+
+    var rn = $("#repo_name").val();
+
+    rn = rn.trim();
+    if (/\s/.test(rn)) {
+      $('#space_alert').show();
+    // It has any kind of whitespace
+    }
+    else{
+      $('#space_alert').hide();
+      var repo_name_var = rn;
+      $.ajax({
+          url: "/check-repo-name/",
+          type: 'POST',
+          data: {
+              repo_name : $("#repo_name").val(),
+              csrfmiddlewaretoken:  $('input[name=csrfmiddlewaretoken]').val()
+          },
+          success: function(data) {
+            console.log("success"); 
+            if (data.message === "Repo already exists") {
+              $('.alert').show();
+              window.location = '/new/'+repo_name_var;
+            }else{
+              $('.alert').hide();
+              create_repo_and_blog(repo_name_var);
+            }
+            console.dir(data);
+            console.log(data);
+            }
+      })
+    }
+    
 
 
   });

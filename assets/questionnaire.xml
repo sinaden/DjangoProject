@@ -17,7 +17,7 @@
                 <M3 />
             </messages>
             <answers>
-                <A0>first</A0>
+                <A0 />
                 <A1 />
                 <A2 />
                 <A3 />
@@ -210,7 +210,7 @@
                 <M6 />
             </messages>
             <answers>
-                <A0>Dist</A0>
+                <A0 />
                 <A1 />
                 <A2 />
                 <A3 />
@@ -251,7 +251,7 @@
                 <A4 />
                 <A5 />
                 <A6 />
-                <A7>last</A7>
+                <A7 />
             </answers>
         </category_7>
     </questionnaire>
