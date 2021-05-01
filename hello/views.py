@@ -712,6 +712,9 @@ def check_repo_launch_ability(request):
                 if xml_file == "version_provenance.xml":
                     download_from_github("xml/example/version_provenance.xml", repo_name)
                     #upload_to_github("version_provenance.xml", repo_name)
+                if xml_file == "about.xml":
+                    download_from_github("xml/empty/about.xml", repo_name)
+
                 else:
                     miss.append(value)
 
@@ -1263,6 +1266,8 @@ def new_figures(request, repo_name):
 
             upload_images_to_github("subsets.jpg", repo_name, "supplementary/figures/")
 
+            modify_github_file_images("xml/target/about.xml", "thematic.jpg", "subsets.jpg" , repo_name)
+
             return new_repo_name(request, repo_name)
         else:
             message = 'The form is not valid. Fix the following error:'
@@ -1315,6 +1320,41 @@ def upload_images_to_github(file_name, repo_name, target_path):
         repo.create_file(git_file, "creating a new file:" + file_name, binary, branch="main")
         print(git_file + ' CREATED')
 
+def modify_github_file_images(path, thematic, subsets, repo_name):
+    g = Github(settings.GITHUN_TOKEN)
+    # change it to a dynamic input later
+    repo = g.get_repo("sinaden/" + repo_name)
+
+    co = repo.get_contents(path)
+    content = co.decoded_content
+
+    xml_string = ""
+
+
+    try:
+        xml_string = repo.get_contents(path)
+        # ok, we have the content
+    except GithubException:
+        print("We are here")
+        blob = get_blob_content(repo, "main", path)
+        b64 = base64.b64decode(blob.content)
+        xml_string = b64.decode("utf8")
+        
+    ghxml = ET.fromstring(xml_string.decoded_content)
+    th = ghxml.find('thematic')
+    sa = ghxml.find('subsetAssociations')
+
+    saf = sa.find('filename')
+    saf.text = "subsets.jpg"
+
+    thf = th.find('filename')
+    thf.text = 'thematic.jpg'
+    
+    xml_str = ET.tostring(ghxml, encoding='unicode')
+    repo.update_file(path, "updating a file:", xml_str, xml_string.sha, branch="main")
+
+
+
 def download_from_github(path, repo_name):
     g = Github(settings.GITHUN_TOKEN)
     # change it to a dynamic input later
@@ -1322,6 +1362,20 @@ def download_from_github(path, repo_name):
 
     co = repo.get_contents(path)
     content = co.decoded_content
+
+
+    # pre processing for about.xml file (remove figures)
+    if "about.xml" in path:
+        ghxml = ET.fromstring(content)
+        fig = ghxml.find('figures')
+        ans = fig.find('answer')
+
+        fig.remove(ans)
+        nans = ET.Element("answer")
+        fig.append(nans)
+        content = ET.tostring(ghxml, encoding='unicode')
+
+
 
     path_ = path.replace("example","target")
     path2 = path_.replace("empty","target")
