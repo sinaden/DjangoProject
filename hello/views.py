@@ -1262,6 +1262,7 @@ def new_figures(request, repo_name):
             
             print("---------------uploading of thematic started ")
             upload_images_to_github("thematic.jpg", repo_name, "supplementary/figures/")
+            
             print("---------------uploading of subsets started ")
 
             upload_images_to_github("subsets.jpg", repo_name, "supplementary/figures/")
@@ -1373,6 +1374,16 @@ def download_from_github(path, repo_name):
         fig.remove(ans)
         nans = ET.Element("answer")
         fig.append(nans)
+
+        th = ghxml.find('thematic')
+        sa = ghxml.find('subsetAssociations')
+
+        saf = sa.find('filename')
+        saf.text = 'datasetassociations.jpg'
+
+        thf = th.find('filename')
+        thf.text = 'thematic.png'
+
         content = ET.tostring(ghxml, encoding='unicode')
 
 
