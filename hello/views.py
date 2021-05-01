@@ -1320,13 +1320,38 @@ def download_from_github(path, repo_name):
     # change it to a dynamic input later
     repo = g.get_repo("sinaden/" + repo_name)
 
-    contents = repo.get_contents(path)
-    conn = contents.decoded_content
+    co = repo.get_contents(path)
+    content = co.decoded_content
 
     path_ = path.replace("example","target")
     path2 = path_.replace("empty","target")
+
+    #repo.create_file(path2, "commit", conn)
+    all_files = []
+    contents = repo.get_contents("")
     
-    repo.create_file(path2, "commit", conn)
+    while contents:
+        file_content = contents.pop(0)
+        if file_content.type == "dir":
+            contents.extend(repo.get_contents(file_content.path))
+        else:
+            file = file_content
+            all_files.append(str(file).replace('ContentFile(path="','').replace('")',''))
+
+    #print(all_files)
+    #git_prefix = target_path
+    git_file = path2
+
+    #print("checkpoint no. 2")
+    #print(git_file)
+
+    if git_file in all_files:
+        contents = repo.get_contents(git_file)
+        repo.update_file(contents.path, "updating a file:" + file_name, content, contents.sha, branch="main")
+        print(git_file + ' UPDATED')
+    else:
+        repo.create_file(git_file, "creating a new file:" + file_name, content, branch="main")
+        print(git_file + ' CREATED')
 
 def upload_yaml_to_github(repo_name, target_path):
 
