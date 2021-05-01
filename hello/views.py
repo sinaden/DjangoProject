@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from .models import Greeting
 from .models import ToDoList, Item
 
-from .forms import CreateNewList, PurposeForm, MyForm
+from .forms import CreateNewList, PurposeForm, MyForm, AboutForm
 
 from .forms import DocumentForm
 
@@ -609,6 +609,67 @@ def fetch_remote_feature(repo_name, file_name):
     return init_map
                         
 
+def fetch_remote_about(repo_name, file_name):
+    g = Github(settings.GITHUN_TOKEN)
+
+    repo = g.get_repo("sinaden/"+repo_name)
+
+    xml_string = ""
+    
+    try:
+        xml_string = repo.get_contents("xml/target/" + file_name)
+        # ok, we have the content
+    except GithubException:
+        #print("We are here")
+        blob = get_blob_content(repo, "main", "xml/target/" +file_name)
+        b64 = base64.b64decode(blob.content)
+        xml_string = b64.decode("utf8")
+        
+    #print(xml_string)
+
+    ghxml = ET.fromstring(xml_string.decoded_content)
+    #q = ghxml.find('questionnaire')
+    fields = {}
+
+
+    title_ans = ghxml.find('title').find('answer')
+    fields['title'] = title_ans.text
+
+
+    au = ghxml.find('authors')
+
+
+    au_ans = au.find('answer')
+
+    la = list(au_ans)
+
+    a_str = ""
+
+    for ax in la:
+        a_str += ax.find("firstnames").text
+        a_str += " "
+        a_str += ax.find("lastname").text
+        a_str += ", "
+
+    # remove the last comma and the rest of it
+    a_str = a_str.rsplit(',', 1)[0]
+    
+    fields['authors'] = a_str
+    
+
+    abans = ghxml.find('abstract').find('answer')
+    fields['abstract'] = abans.text 
+    
+    re_main = ghxml.find('research').find('main').find('answer')
+    fields['research_main'] = re_main.text 
+
+    re_sec = ghxml.find('research').find('secondary').find('answer')
+    fields['research_secondary']= re_sec.text
+
+
+    return fields
+
+
 def fetch_remote_datasheet(repo_name, file_name):
     g = Github(settings.GITHUN_TOKEN)
 
@@ -1065,10 +1126,45 @@ def new_datasheet(request):
         form = PurposeForm()
     return render(request, "new_datasheet.html",{ "form":form})
 
-def new_about(request, repo_name):
-    download_from_github("xml/empty/about.xml", repo_name)
-    user = request.user 
-    return render(request, "new_repository.html", {"name" : user.get_username(), "message": "About has been successfully created", "repo_name": repo_name})
+def new_about(request, repo_name, is_edit = False):
+
+    if request.method == 'POST': 
+        user = request.user 
+
+        form = AboutForm(request.POST)
+        # check whether it's valid:
+        
+        if form.is_valid():
+            # process the data in form.cleaned_data as required  
+            fields = {}        
+            for key, value in form.cleaned_data.items():
+                fields[key] = value
+            
+            modify_about_file( "xml/target/about.xml",fields, repo_name)
+
+            print(".................::::::::::::::::: DONE uploading to github :::::::::::::::....................")
+            
+            return new_repo_name(request, repo_name)
+            
+            if not is_edit:
+                return new_repo_name(request, repo_name)
+            else:
+                return owned_repos(request, "Successfully Edited")
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        if not is_edit:
+            form = AboutForm()
+        else:
+            print("-------Start--------")
+            print("fetch the form from github")
+            file_name = "about.xml"
+            init_values = fetch_remote_about(repo_name, file_name)
+
+            form = AboutForm(initial= init_values)
+            print("-------Succeeded--------")
+
+    return render(request, "new_about.html",{ "form":form, "repo_name":repo_name})
+
 
 def new_keywords(request, repo_name, is_edit = False):
     
@@ -1262,7 +1358,7 @@ def new_figures(request, repo_name):
             
             print("---------------uploading of thematic started ")
             upload_images_to_github("thematic.jpg", repo_name, "supplementary/figures/")
-            
+
             print("---------------uploading of subsets started ")
 
             upload_images_to_github("subsets.jpg", repo_name, "supplementary/figures/")
@@ -1320,6 +1416,75 @@ def upload_images_to_github(file_name, repo_name, target_path):
         print(git_file, " doesnnnnnnnnnnnnnnnnnnt exists in all files")
         repo.create_file(git_file, "creating a new file:" + file_name, binary, branch="main")
         print(git_file + ' CREATED')
+
+
+def modify_about_file(path, fields, repo_name):
+    g = Github(settings.GITHUN_TOKEN)
+    # change it to a dynamic input later
+    repo = g.get_repo("sinaden/" + repo_name)
+
+    co = repo.get_contents(path)
+    content = co.decoded_content
+
+    xml_string = ""
+
+
+    try:
+        xml_string = repo.get_contents(path)
+        # ok, we have the content
+    except GithubException:
+        print("We are here")
+        blob = get_blob_content(repo, "main", path)
+        b64 = base64.b64decode(blob.content)
+        xml_string = b64.decode("utf8")
+        
+    ghxml = ET.fromstring(xml_string.decoded_content)
+
+    title_ans = ghxml.find('title').find('answer')
+    title_ans.text = fields['title']
+
+    au_list = fields['authors'].split(',')
+    no_au = len(au_list)
+
+    au = ghxml.find('authors')
+    au_ans = au.find('answer')
+    au.remove(au_ans)
+
+    au_nans = ET.Element('answer')
+    au.append(au_nans)
+    
+    for cnt in range(0, no_au):
+        au_x = ET.Element("author_"+str(cnt + 1)) 
+        
+        
+
+        fn = ET.Element("firstnames")
+        ln = ET.Element("lastname")
+        em = ET.Element("email")
+
+        fullname = au_list[cnt].strip() 
+
+        fn.text = fullname.split(' ')[0]
+        ln.text = fullname.split(' ')[-1]
+        au_x.append(fn)
+        au_x.append(ln)
+        au_x.append(em)
+
+        au_nans.append(au_x)
+
+    abans = ghxml.find('abstract').find('answer')
+    abans.text = fields['abstract']
+    
+    re_main = ghxml.find('research').find('main').find('answer')
+    re_main.text = fields['research_main']
+
+    re_sec = ghxml.find('research').find('secondary').find('answer')
+    re_sec.text = fields['research_secondary']
+
+    
+    xml_str = ET.tostring(ghxml, encoding='unicode')
+    repo.update_file(path, "updating a file:", xml_str, xml_string.sha, branch="main")
+
 
 def modify_github_file_images(path, thematic, subsets, repo_name):
     g = Github(settings.GITHUN_TOKEN)

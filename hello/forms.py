@@ -4,33 +4,8 @@ class CreateNewList(forms.Form):
     name = forms.CharField(label="Name", max_length = 200, widget=forms.TextInput(attrs={'class': 'form-control', 'style':'max-width : 200px;'}))
     password = forms.CharField(label="Password", max_length = 200, widget=forms.PasswordInput(attrs={'class': 'form-control', 'style':'max-width : 200px;'}))
 
-    #check = forms.BooleanField(required = False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 class PurposeForm(forms.Form):
     
-    # title_motivation = forms.CharField(required=False, label="Motivation",  widget=forms.TextInput(attrs={'style':'visibility:hidden; height:0px; padding:0px;'}))
-    # desc_motivation = forms.CharField(required=False, 
-    #  label="The questions in this category are primarily intended to encourage dataset creators to clearly articulate their reasons for creating the dataset and to promote transparency about funding interests.", 
-    #   widget=forms.TextInput(attrs={'style':'visibility:hidden; height:0px; padding:0px;'}))
-
-    # motivation_1 = forms.CharField(required=False,label="For what purpose was the dataset created?",
-    # help_text='Was there a specific task in mind? Was there a specific gap that needed to be filled? Please provide a description.', widget=forms.Textarea(attrs={'class': 'form-control'}))
-    # motivation_2 = forms.CharField(required=False,
-    # label="Who created the dataset (e.g., which team, research group) and on behalf of which entity (e.g., company, institution, organization)?", widget=forms.Textarea(attrs={'class': 'form-control'}))
-    # motivation_3 = forms.CharField(required=False,label="Who funded the creation of the dataset?",
-    # help_text='If there is an associated grant, please provide the name of the grantor and the grant name and number.', widget=forms.Textarea)
-    
-    # motivation_4 = forms.CharField(required=False,label="Any other comments?",
-    # help_text='If there is an associated grant, please provide the name of the grantor and the grant name and number.', widget=forms.Textarea)
-
-    # title_composition = forms.CharField(required=False,label="Composition", 
-    #  widget=forms.TextInput(attrs={'style':'visibility:hidden; height:0px; padding:0px;'}))
-
-    # desc_composition = forms.CharField(required=False,label="Most of these questions are intended to provide dataset consumers with the information they need to make informed decisions about using the dataset for specific tasks. The answers to some of these questions reveal information about compliance with the EU’s General Data Protection Regulation (GDPR) or comparable regulations in other jurisdictions.", 
-    #  widget=forms.TextInput(attrs={'style':'visibility:hidden; height:0px; padding:0px;'}))
-
-    # composition_1 = forms.CharField(required=False,label="What do the instances that comprise the dataset represent (e.g., samples, images, people)?",
-    # help_text='Are there multiple types of instances (e.g., samples, images, and people), interactions (e.g., nodes and edges), resolutions (e.g., genetic data, single cell expression vs. tissue expression, cell counts, different image technologies, etc.)? Please provide a description.', max_length = 200, widget=forms.Textarea(attrs={'class': 'form-control','title':"MYMEGATITLE", 'style':'max-width : 200px;'}))
-
     title_motivation = forms.CharField(required=False, label="Motivation",  widget=forms.TextInput(attrs= { 'style': 'visibility:hidden; height:0px; padding:0px;' } ))
 
 
@@ -249,10 +224,25 @@ class PurposeForm(forms.Form):
 
     maintenance_8 = forms.CharField(required=False,label="Any other comments?", help_text='', widget=forms.Textarea(attrs={'class': 'form-control'}))
 
-
 class DocumentForm(forms.Form):
     subsets = forms.FileField(label='Select a file for subsets (around 1000 x 1000 )')
     thematic = forms.FileField(label='Select a file for thematic ')
+
+class AboutForm(forms.Form):
+    
+    title = forms.CharField(required=False, label=" What is the title of your dataset?", widget=forms.TextInput(attrs={'class':'form-control' } ))
+
+    authors = forms.CharField(required=False, label=" Who are the dataset's authors? (provide fullnames)",help_text=' Use comma between names if there are multiple people, use blank space to separare first name and last names', widget=forms.TextInput(attrs={'class':'form-control' } ))
+
+
+    abstract = forms.CharField(required=False, label=" Please provide a brief abstract describing this dataset.", widget=forms.TextInput(attrs={'class':'form-control' } )) 
+
+
+    research_main = forms.CharField(required=False,label="Please state, in detail, the main hypothesis for which this dataset was created.", help_text='', widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+
+    research_secondary = forms.CharField(required=False,label="Please state, in detail, any other hypotheses which this dataset would be able to address.", help_text='If there is an associated grant, please provide the name of the grantor and the grant name and number.', widget=forms.Textarea(attrs={'class': 'form-control'}))
+
 
 
 #dynamic form
@@ -309,17 +299,6 @@ class MyForm(forms.Form):
                 forms.CharField(required=False, label = "Have you calculated a covariance matrix (or similar) and made it available in this dataset? Where?")
             self.fields['subset_{index}_11'.format(index=index)] = \
                 forms.CharField(required=False, label = "Have you modeled all (or a few) features and made the models accessible in this dataset? Where?")
-                
-        #self.initial['subset_0_4'] = 'test'
-        
-        #super(MyForm, self).__init__(*args, **kwargs)
-        ######################
-         #   kwargs.update(initial={
-        # 'field': 'value'
-        #'km_partida': '1020'
-        #})
-
-        #super(ViagemForm, self).__init__(*args, **kwargs)
 
         try:
             self.fields['subset_0_5'].initial = "hello this is a test"

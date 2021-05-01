@@ -42,16 +42,13 @@
   <hr>
   <div class="row">
     <div class="col-md-12">
-      <h3><span class="glyphicon glyphicon-cloud"></span> Datasheet </h3> <h4> Subjective Description of the Dataset {{repo_name}}</h4>
+      <h3><span class="glyphicon glyphicon-cloud"></span> About the dataset </h3> <h4> The abstract and research question, as well as authors information </h4>
       <form method="POST" class="form-group">
         {% csrf_token %}
         {{form|crispy}}
-        <button type="submit" class="btn btn-success">Register</button>
+        <button type="submit" class="btn btn-success">Submit</button>
     </form>
  
-  </div> <!-- row -->
-   <div class="alert alert-light text-center" role="alert">
-    Please do work1 through the Getting Started guide.
   </div>
 </div>
 
@@ -60,7 +57,7 @@
 <script type="text/javascript">
     
         $(document).ready(function() {
-            autosize(document.getElementById("id_motivation_1"));
+           // autosize(document.getElementById("id_motivation_1"));
 
             //alert("fff");
 
@@ -70,4 +67,3 @@
 
 
 {% endblock %}
-

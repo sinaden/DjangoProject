@@ -30,12 +30,12 @@ urlpatterns = [
 
     path("new-feature/<repo_name>", hello.views.new_feature, name="new subsetfeature (metaclass)"),
     path("new-about/<repo_name>", hello.views.new_about, name="new about form"),
+    path("new-about/<repo_name>/<is_edit>", hello.views.new_about, name="edit about"),
+
     path("new-keywords/<repo_name>", hello.views.new_keywords, name="new keyword definitions"),
     path("new-keywords/<repo_name>/<is_edit>", hello.views.new_keywords, name="edit keyword definitions"),
 
     path("new-figures/<repo_name>", hello.views.new_figures, name="new figures"),
-    
-
 
 
     path("check-repo-name/", hello.views.check_name_availability, name="check repo name"),
