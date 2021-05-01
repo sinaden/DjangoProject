@@ -1347,10 +1347,10 @@ def download_from_github(path, repo_name):
 
     if git_file in all_files:
         contents = repo.get_contents(git_file)
-        repo.update_file(contents.path, "updating a file:" + file_name, content, contents.sha, branch="main")
+        repo.update_file(contents.path, "updating a file:" + git_file, content, contents.sha, branch="main")
         print(git_file + ' UPDATED')
     else:
-        repo.create_file(git_file, "creating a new file:" + file_name, content, branch="main")
+        repo.create_file(git_file, "creating a new file:" + git_file, content, branch="main")
         print(git_file + ' CREATED')
 
 def upload_yaml_to_github(repo_name, target_path):
