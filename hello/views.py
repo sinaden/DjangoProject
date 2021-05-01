@@ -1331,50 +1331,44 @@ def upload_yaml_to_github(repo_name, target_path):
     g = Github(settings.GITHUN_TOKEN)
     # change it to a dynamic input later
     repo = g.get_repo("sinaden/" + repo_name)
-
-
     inp = """\
-        # This workflow will install Python dependencies, run tests and lint with a single version of Python
-        # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
-        # please change "sinaden" parameter in this file to the username of your github account (in which this repository is residing)
+name: Python application
 
-        name: Python application
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
-        on:
-        push:
-            branches: [ main ]
-        pull_request:
-            branches: [ main ]
+jobs:
+  build:
 
-        jobs:
-        build:
+    runs-on: ubuntu-latest
 
-            runs-on: ubuntu-latest
-
-            steps:
-            - uses: actions/checkout@v2
-            - name: Set up Python 3.9
-            uses: actions/setup-python@v2
-            with:
-                python-version: 3.9
-            - name: Install dependencies
-            run: |
-                python -m pip install --upgrade pip
-                pip install bs4
-            - name: run my python code
-            run: |
-                python ./code/build_site/xml2html.py -u target
-            - name: Commit files # transfer the new html files back into the repository
-            run: |
-                git config --local user.name "sinaden"
-                git add ./docs
-                git commit -m "commit the html file"
-            - name: Push changes # push the output folder to your repo
-            uses: ad-m/github-push-action@master
-            with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-                force: true
-        """
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bs4
+    - name: run my python code
+      run: |
+        python ./code/build_site/xml2html.py -u target
+    - name: Commit files # transfer the new html files back into the repository
+      run: |
+        git config --local user.name "sinaden"
+        git add ./docs
+        git commit -m "commit the html file"
+    - name: Push changes # push the output folder to your repo
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        force: true
+"""
     repo.create_file(target_path, "pushcommit", inp)
 
 def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
