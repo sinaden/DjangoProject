@@ -1063,7 +1063,7 @@ def new_datasheet(request):
     return render(request, "new_datasheet.html",{ "form":form})
 
 def new_about(request, repo_name):
-    download_from_github("xml/example/about.xml", repo_name)
+    download_from_github("xml/empty/about.xml", repo_name)
     user = request.user 
     return render(request, "new_repository.html", {"name" : user.get_username(), "message": "About has been successfully created", "repo_name": repo_name})
 
@@ -1323,7 +1323,9 @@ def download_from_github(path, repo_name):
     contents = repo.get_contents(path)
     conn = contents.decoded_content
 
-    path2 = path.replace("example","target")
+    path_ = path.replace("example","target")
+    path2 = path_.replace("empty","target")
+    
     repo.create_file(path2, "commit", conn)
 
 def upload_yaml_to_github(repo_name, target_path):
