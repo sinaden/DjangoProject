@@ -72,8 +72,9 @@
 
       -->
         <form method="POST">
-            
-            <button id="add-another" name="keyword_submission"  class="btn btn-lg btn-default" >add Keyword</button>
+            <div style="margin-bottom: 10px;">
+              <button id="add-another" name="keyword_submission"  class="btn btn-lg btn-default" >add Keyword</button>
+            </div>
 
             <div id="forms">
                 {% csrf_token %}
@@ -107,7 +108,7 @@
                 {% endfor %}
  
             </div>
-            <input type="submit" name="data_submission" />
+            <input type="submit" name="data_submission" class="btn btn-success" />
         </form>
     <!-- </form> -->
  
