@@ -58,7 +58,7 @@
   <hr>
   <div class="row">
     <div class="col-md-12">
-      <h3><span class="glyphicon glyphicon-cloud"></span> Subset & Features </h3> 
+      <h3><span class="glyphicon glyphicon-education"></span> Statistics </h3> <h4> Description of Subsets and Features of the Dataset</h4>
       <!-- 
         
         <form method="POST" class="form-group">
@@ -69,9 +69,12 @@
       -->
         <form method="POST">
             
+          <div style="margin-bottom: 10px;">
             <button id="add-another" name="subset_submission"  class="btn btn-lg btn-default" >add subset</button>
 
             <button id="add-feature" name="feature_submission" class="btn btn-lg btn-success" style="background-color: cadetblue;">add feature</button>
+
+          </div>
 
             <div id="forms">
                 {% csrf_token %}
@@ -105,14 +108,11 @@
                 {% endfor %}
  
             </div>
-            <input type="submit" name="data_submission" />
+            <input type="submit" name="data_submission" class="btn btn-success"/>
         </form>
     <!-- </form> -->
  
   </div> <!-- row -->
-   <div class="alert alert-light text-center" role="alert">
-    Please do work1 through the Getting Started guide.
-  </div>
 </div>
 
 <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>

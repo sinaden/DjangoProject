@@ -10,8 +10,10 @@ def register(request):
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save() # saves user in the user database
-        return redirect("/")
+            #form.save() # saves user in the user database
+            user = form.save()
+            return redirect("/")
+
     else:
         form = RegisterForm()
     return render(request, "register/register.html", {"form" : form})

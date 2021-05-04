@@ -42,7 +42,7 @@
   <hr>
   <div class="row">
     <div class="col-md-12">
-      <h3><span class="glyphicon glyphicon-cloud"></span> Datasheet </h3> <h4> Subjective Description of the Dataset {{repo_name}}</h4>
+      <h3><span class="glyphicon glyphicon-cloud"></span> Purpose </h3> <h4> Datasheet of the dataset, {{repo_name}}</h4>
       <form method="POST" class="form-group">
         {% csrf_token %}
         {{form|crispy}}
@@ -50,9 +50,7 @@
     </form>
  
   </div> <!-- row -->
-   <div class="alert alert-light text-center" role="alert">
-    Please do work1 through the Getting Started guide.
-  </div>
+   
 </div>
 
 <script src="https://rawgit.com/jackmoore/autosize/master/dist/autosize.min.js"></script>
