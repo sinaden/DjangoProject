@@ -772,7 +772,7 @@ def check_repo_launch_ability(request):
         repo = g.get_repo("sinaden/"+repo_name)
         miss = []
 
-        ls = {"about.xml": "About form", "feature_description.xml": "Subset and features datasheet","keyword_definitions.xml" : "Keyword definitions","questionnaire.xml" : "Purpose Datasheet ","version_provenance.xml":""}
+        ls = {"about.xml": "Context form", "feature_description.xml": "Statistics","keyword_definitions.xml" : "Keywords","questionnaire.xml" : "Purpose ", "version_provenance.xml":""}
         for xml_file, value  in ls.items():
             try:
                 contents = repo.get_contents("xml/target/" + xml_file)
@@ -783,13 +783,11 @@ def check_repo_launch_ability(request):
                 if xml_file == "version_provenance.xml":
                     download_from_github("xml/example/version_provenance.xml", repo_name)
                     #upload_to_github("version_provenance.xml", repo_name)
-                if xml_file == "about.xml":
+                elif xml_file == "about.xml":
                     download_from_github("xml/empty/about.xml", repo_name)
-
                 else:
                     miss.append(value)
 
-        print("is this being read")
 
         jsonArray = json.dumps(miss)
         if miss:
