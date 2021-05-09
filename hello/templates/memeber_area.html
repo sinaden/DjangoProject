@@ -25,17 +25,11 @@ li {
 }
 </style>
 <div class="jumbotron text-center">
-  <div class="container">
-    <!--<a href="/" class="lang-logo">
-      <img src="{% static 'lang-logo.png'%}">
-    </a>-->
-    <h1 style="margin-bottom: 40px;font-size: 45px;">Welcome to dashboard {{name}}</h1>
-    
-   <!-- <p>Manage datasheets, create new ones, track and edit. </p>-->
+  <div class="container"> 
+    <h1 style="margin-bottom: 40px;font-size: 45px;">Welcome to dashboard {{name}}</h1> 
     <a type="button" class="btn btn-lg btn-default" href="" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-plus"></span> Create new repository</a>
     <a type="button" class="btn btn-lg btn-primary" href="/owned/"><span class="glyphicon glyphicon-eye-open"></span> Owned repositoties</a>
-   <!-- <a type="button" class="btn btn-lg btn-info" href="/watch/"><span class="glyphicon glyphicon-search"></span> Watch repos</a>-->
-
+ 
       <!-- Modal -->
       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">

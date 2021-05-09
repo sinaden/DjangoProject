@@ -7,9 +7,6 @@ import json
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
-from .models import Greeting
-from .models import ToDoList, Item
-
 from .forms import CreateNewList, PurposeForm, MyForm, AboutForm
 
 from .forms import DocumentForm
@@ -1083,8 +1080,6 @@ def new_datasheet_name(request, repo_name):
         2. Find a way to get the xml converted to a form element and then we could edit it via a different form. 
         3. make interactive form, such that we can add a new field and a new subfield. Try with adding a new field from the template. 
     '''
-    #ls = ToDoList.objects.get(id=1)
-    #im = ls.item_set.get(id=id)
 
      # if this is a POST request we need to process the form data
     if request.method == 'POST': 
@@ -1396,10 +1391,10 @@ def new_figures(request, repo_name):
     return render(request, 'list.html', context)
 
 
-def v1(request, id):
-    ls = ToDoList.objects.get(id=1)
-    im = ls.item_set.get(id=id)
-    return HttpResponse('<h1> Sina \'s Task is: %s </h1>' %im.text)
+# def v1(request, id):
+#     ls = ToDoList.objects.get(id=1)
+#     im = ls.item_set.get(id=id)
+#     return HttpResponse('<h1> Sina \'s Task is: %s </h1>' %im.text)
 
 def upload_images_to_github(file_name, repo_name, target_path):
     g = Github(settings.GITHUN_TOKEN)
@@ -1681,8 +1676,6 @@ def upload_to_github(file_name, repo_name, target_path = "xml/target/"):
         print(git_file + ' CREATED')
 
 def create(request):
-    #ls = ToDoList.objects.get(id=1)
-    #im = ls.item_set.get(id=id)
 
      # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -1743,13 +1736,13 @@ def create(request):
 
 
 
-def db(request):
+# def db(request):
 
-    greeting = Greeting()
-    greeting.save()
+#     greeting = Greeting()
+#     greeting.save()
 
-    greetings = Greeting.objects.all()
+#     greetings = Greeting.objects.all()
 
-    return render(request, "db.html", {"greetings": greetings})
+#     return render(request, "db.html", {"greetings": greetings})
 
 
