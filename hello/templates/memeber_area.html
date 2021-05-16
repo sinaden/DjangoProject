@@ -43,7 +43,7 @@ li {
               <input type="text" id="repo_name" name="repo_name" class="form-control" style="max-width: 300px;" placeholder="Type your project's title"> <br>
               <span id="validationMessage" style="display: none; color: rgb(218, 0, 0);">Name already exists</span>
               
-              <div class="alert alert-danger" role="alert"  style="display: none">
+              <div id="unique_alert" class="alert alert-danger" role="alert"  style="display: none">
                 Name already exists
               </div>
               <div id="space_alert" class="alert alert-danger" role="alert"  style="display: none">
@@ -145,8 +145,6 @@ li {
       }
     });
 
-    console.log(response2);
-    console.log("should change the url now");
     $('.loader').hide();
     window.location = '/new/'+r_name;
   }
@@ -160,6 +158,7 @@ li {
     rn = rn.trim();
     if (/\s/.test(rn)) {
       $('#space_alert').show();
+      $('#unique_alert').hide();
     // It has any kind of whitespace
     }
     else{
@@ -175,10 +174,10 @@ li {
           success: function(data) {
             console.log("success"); 
             if (data.message === "Repo already exists") {
-              $('.alert').show();
-              window.location = '/new/'+repo_name_var;
+              $('#unique_alert').show();
+              //window.location = '/new/'+repo_name_var;
             }else{
-              $('.alert').hide();
+              $('#unique_alert').hide();
               create_repo_and_blog(repo_name_var);
             }
             console.dir(data);
@@ -186,9 +185,6 @@ li {
             }
       })
     }
-    
-
-
   });
     
   $(document).ready(function() {

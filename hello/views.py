@@ -724,34 +724,22 @@ def fetch_remote_datasheet(repo_name, file_name):
     return init_map
 
 def check_name_availability(request):
-    '''Gets the name of the new repository from member_area.html and creates a new repository on github account.
-    If the name was not unique otherwise ask for a new one '''
-
-    #breakpoint()
+    '''Gets the name of the new repository from member_area.html and creates a new repository on github account. '''
     if request.method == 'POST':
-        name = request.POST.get('repo_name')
+        repo_name = request.POST.get('repo_name')
         
         g = Github(settings.GITHUN_TOKEN)
+        user = g.get_user()
+        github_username = user.login
         try:
-            repo = g.get_repo("sinaden/"+name)
+            repo = g.get_repo(github_username+"/"+repo_name)
             if not repo:
-                print(repo)
-                print("was not outside")
-                print("was not outside") 
                 return JsonResponse({'message':'Name was unique'})
             else:
-                print(repo)
                 return JsonResponse({'message':'Repo already exists'})
         except Exception as e:
             print(e)
-        #    user = g.get_user()
-        #    new_repo = user.create_repo(name, description = "Created on heroku")
-        #    new_repo.create_file("README.md", "first commit", "Repo was created on heroku")
-
-            
             return JsonResponse({'message':'Name was unique, repo not created so that javascript can create it instead'})
-
-        
     return JsonResponse({'message':'request was not valid'})
 
 def check_repo_launch_ability(request):
