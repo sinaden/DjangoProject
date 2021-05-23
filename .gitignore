@@ -4,3 +4,8 @@ staticfiles
 .env
 db.sqlite3
 getting-started/*
+locustfile.py
+chromedriver.exe
+hello/_tests.py
+hello/tests.py
+hello/tests.py

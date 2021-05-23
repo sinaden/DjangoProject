@@ -230,9 +230,9 @@ class DocumentForm(forms.Form):
 
 class AboutForm(forms.Form):
     
-    title = forms.CharField(required=False, label=" What is the title of your dataset?", widget=forms.TextInput(attrs={'class':'form-control' } ))
+    title = forms.CharField(required=True, label=" What is the title of your dataset?", widget=forms.TextInput(attrs={'class':'form-control' } ))
 
-    authors = forms.CharField(required=False, label=" Who are the dataset's authors? (provide fullnames)",help_text=' Use comma between names if there are multiple people, use blank space to separare first name and last names', widget=forms.TextInput(attrs={'class':'form-control' } ))
+    authors = forms.CharField(required=True, label=" Who are the dataset's authors? (provide fullnames)",help_text=' Use comma between names if there are multiple people, use blank space to separare first name and last names', widget=forms.TextInput(attrs={'class':'form-control' } ))
 
 
     abstract = forms.CharField(required=False, label=" Please provide a brief abstract describing this dataset.", widget=forms.TextInput(attrs={'class':'form-control' } )) 

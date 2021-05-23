@@ -178,7 +178,8 @@ li {
               //window.location = '/new/'+repo_name_var;
             }else{
               $('#unique_alert').hide();
-              create_repo_and_blog(repo_name_var);
+              console.log(data.repo_name);
+              create_repo_and_blog(data.repo_name);
             }
             console.dir(data);
             console.log(data);

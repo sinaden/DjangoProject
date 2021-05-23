@@ -1,11 +1,10 @@
 import requests
 from django.conf import settings
-
 from django.http import JsonResponse
 import json
 
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, HttpResponseForbidden, HttpResponseServerError
 
 from .forms import CreateNewList, PurposeForm, MyForm, AboutForm
 
@@ -63,6 +62,7 @@ def new_repo(request):
 
 def owned_repos(request, msg =""):
     user = request.user
+    maids_username = user.get_username()
     
     if not user.is_authenticated:
         index(request)
@@ -70,18 +70,28 @@ def owned_repos(request, msg =""):
     g = Github(settings.GITHUN_TOKEN)
 
     repos = []
+    watchlist = []
     user = g.get_user()
     april_2021 = datetime(2021, 4, 23)
 
     for repo in user.get_repos():
         if repo.created_at > april_2021:
-            repos.append(repo.name)
-    url = "https://{username}.github.io/".format(username=user.login)
+            if repo.name.startswith(maids_username+'_'):
+                repos.append(repo.name)
+            else:
+                watchlist.append(repo.name)
+    static_website_url = "https://{username}.github.io/".format(username=user.login)
+    repo_url = "https://github.com/{username}/".format(username=user.login)
     
-    return render(request, "owned_repos.html", {"repo_list" : repos, "message" : msg, "url": url})
+    return render(request, "owned_repos.html", {"repo_list" : repos, "watch_list":watchlist, "message" : msg, "url": static_website_url, "repo_url":repo_url})
+
 
 
 def edit_datasheet_repo(request, repo_name):
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
+
     user = request.user
     
     if not user.is_authenticated:
@@ -100,12 +110,18 @@ def edit_datasheet_repo(request, repo_name):
             for key, value in form.cleaned_data.items():
                 if not (("title_" in key) or ("desc_" in key)):
                     converter.form_xml(key, value)
-            file_name = converter.save()
-            print(".................::::::: SUCCESSFULLY converted to " + file_name)
 
+            try:
+                file_name = converter.save()
+                print(".................::::::: SUCCESSFULLY converted to " + file_name)
 
-            upload_to_github(file_name, repo_name)
+                if file_name == "Structure Validation Error":
+                    return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1>XML Structure Validation Error</h1></center>")
+                upload_to_github(file_name, repo_name)
+            except Exception as e:
+                return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1> Server Error: {error}</h1></center>".format(error=str(e)))
 
+        
             print(".................::::::::::::::::: DONE uploading to github :::::::::::::::....................")
              
             #repos = ['connect_heroku', 'mofi_connect', 'test repo1', 'Moshgan repo']
@@ -127,6 +143,10 @@ def edit_datasheet_repo(request, repo_name):
     return render(request, "new_datasheet.html",{ "form":form, "repo_name":repo_name})
 
 def edit_subsetfeature_repo(request, repo_name):
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseForbidden("Access is not authorized")
+
     user = request.user
     if not user.is_authenticated:
         index(request)
@@ -226,6 +246,7 @@ def edit_subsetfeature_repo(request, repo_name):
         
         F_form = type('F_form', (forms.BaseForm,), { 'base_fields': fields })
         form = F_form() 
+
         if "data_submission" not in request.POST:
             print("------------------- bye for now ")
             return render(request, "new_subsetfeature.html", { 'form': form })
@@ -239,6 +260,7 @@ def edit_subsetfeature_repo(request, repo_name):
             print("Form is being submitted")
             user = request.user 
             converter = SFConverter(user.get_username())
+
 
             fDict = dict()
             sDict = dict()
@@ -356,11 +378,20 @@ def edit_subsetfeature_repo(request, repo_name):
                 except Exception as e:
                     print("exception occured", str(e))
                     return render(request, "new_subsetfeature.html", { 'form': form, 'error_message': e})
+            try:
+                file_name = converter.save()
 
-            file_name = converter.save()
-            print(".................::::::: SUCCESSFULLY converted to " + file_name)
+                if file_name == "Subset ID Error":
+                    return render(request, "new_subsetfeature.html", { 'form': form , 'error_message': "Please fill the Subsets IDs as mentioned"})
 
-            upload_to_github(file_name, repo_name)
+                if file_name == "Structure Validation Error":
+                    return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1>XML Structure Validation Error</h1></center>")
+
+                print(".................::::::: SUCCESSFULLY converted to " + file_name)
+
+                upload_to_github(file_name, repo_name)
+            except Exception as e:
+                return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1> Server Error: {error}</h1></center>".format(error=str(e)))
             
             return owned_repos(request, "Edited Successfully")
 
@@ -726,7 +757,8 @@ def fetch_remote_datasheet(repo_name, file_name):
 def check_name_availability(request):
     '''Gets the name of the new repository from member_area.html and creates a new repository on github account. '''
     if request.method == 'POST':
-        repo_name = request.POST.get('repo_name')
+        username = request.user.get_username()
+        repo_name = username + "_" + request.POST.get('repo_name')
         
         g = Github(settings.GITHUN_TOKEN)
         user = g.get_user()
@@ -734,12 +766,12 @@ def check_name_availability(request):
         try:
             repo = g.get_repo(github_username+"/"+repo_name)
             if not repo:
-                return JsonResponse({'message':'Name was unique'})
+                return JsonResponse({'message':'Name was unique', 'repo_name':repo_name})
             else:
                 return JsonResponse({'message':'Repo already exists'})
         except Exception as e:
             print(e)
-            return JsonResponse({'message':'Name was unique, repo not created so that javascript can create it instead'})
+            return JsonResponse({'message':'Name was unique, repo not created so that javascript can create it instead', 'repo_name':repo_name})
     return JsonResponse({'message':'request was not valid'})
 
 def check_repo_launch_ability(request):
@@ -804,6 +836,9 @@ def new_repo_name(request, repo_name):
     return render(request, "new_repository.html", {"name" : user.get_username(), "repo_name": repo_name})
 
 def new_feature(request, repo_name):
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
     '''
     code copied from stackoverflow https://stackoverflow.com/questions/6142025/dynamically-add-field-to-a-form
     ''' 
@@ -1055,6 +1090,7 @@ def new_feature(request, repo_name):
     else:
         fields = {    'extra_field_count' : forms.CharField(widget=forms.HiddenInput()),
             'extra_ft_count' : forms.CharField(widget=forms.HiddenInput())}
+            
         form = type('WeirdForm', (forms.BaseForm,), { 'base_fields': fields })
 
     return render(request, "new_subsetfeature.html", { 'form': form })
@@ -1062,6 +1098,9 @@ def new_feature(request, repo_name):
 
 
 def new_datasheet_name(request, repo_name):
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
     '''
     Todo:
         1. Form paramters and their value should be put in the proper xml format and uploaded to github. Name should be "Purpose.xml"
@@ -1083,11 +1122,18 @@ def new_datasheet_name(request, repo_name):
             for key, value in form.cleaned_data.items():
                 if not (("title_" in key) or ("desc_" in key)):
                     converter.form_xml(key, value)
-            file_name = converter.save()
-            print(".................::::::: SUCCESSFULLY converted to " + file_name)
+            
+            try:
+                file_name = converter.save()
+                print(".................::::::: SUCCESSFULLY converted to " + file_name)
 
+                if file_name == "Structure Validation Error":
+                    return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1>XML Structure Validation Error</h1></center>")
 
-            upload_to_github(file_name, repo_name)
+                upload_to_github(file_name, repo_name)
+            except Exception as e:
+                return HttpResponseServerError("<br><br><center><h1> 500 Error <h1> <br> <h1> Server Error: {error}</h1></center>".format(error=str(e)))
+
 
             print(".................::::::::::::::::: DONE uploading to github :::::::::::::::....................")
             
@@ -1099,6 +1145,9 @@ def new_datasheet_name(request, repo_name):
     return render(request, "new_datasheet.html",{ "form":form, "repo_name":repo_name})
 
 def new_datasheet(request): 
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
      # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -1118,9 +1167,10 @@ def new_datasheet(request):
     return render(request, "new_datasheet.html",{ "form":form})
 
 def new_about(request, repo_name, is_edit = False):
-
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
     print("check if is_edit is workin:")
-
 
     print(is_edit)
 
@@ -1163,12 +1213,11 @@ def new_about(request, repo_name, is_edit = False):
 
 
 def new_keywords(request, repo_name, is_edit = False):
-    
-    #upload_to_github("keyword_definitions.xml", repo_name)
-    #user = request.user 
-    #return render(request, "new_repository.html", {"name" : user.get_username(), "message": "Keyword definitions have been successfully created", "repo_name": repo_name})
+     
 
-
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
      
     if request.method == 'POST':
         
@@ -1326,6 +1375,11 @@ def getSize(fileobject):
     return size
 
 def new_figures(request, repo_name):
+    
+    maids_username = request.user.get_username()
+    if not repo_name.startswith(maids_username + "_"):
+        return HttpResponseNotFound("Page not found")
+        
     # upload_images_to_github("thematic.jpg", repo_name, "supplementary/figures/")
     # upload_images_to_github("subsets.jpg", repo_name, "supplementary/figures/")
 

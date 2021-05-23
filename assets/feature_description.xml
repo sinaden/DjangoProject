@@ -36,16 +36,16 @@
   <Subset_Feature_Dataset>
     <Subset_1>
       <ID>1</ID>
-      <Name>Microbiome data</Name>
-      <LastUpdate>April 2021</LastUpdate>
-      <Modality>Omnics data</Modality>
+      <Name>test</Name>
+      <LastUpdate />
+      <Modality />
       <Format />
-      <Size>800</Size>
-      <ParentID>0</ParentID>
+      <Size />
+      <ParentID />
       <Purpose />
       <Link />
       <Covmat />
-      <Modsys>all features modeled by PGP-pipeline</Modsys>
+      <Modsys />
       <Features />
     </Subset_1>
   </Subset_Feature_Dataset>

@@ -47,13 +47,13 @@
     </div>
     {% endif%} 
   <hr>
+  <h3>Created by you</h3>
   <div class="row">
     {% for repo in repo_list %}
         <div class="col-md-4">
             <div class="panel panel-success">
                 <div class="panel-heading" style="background-color: #98f3ce; border: 0px; padding-bottom: 20px;">
-                <h3 class="panel-title" style="display: inline;  font-weight: bold; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">Repo: {{repo}}
-                  <a type="button" class="btn btn-sm btn-default" style="float:right;" href="{{url}}{{repo}}" target="_blank"><span class="glyphicon glyphicon-edit"></span> View website </a></h3>
+                <h3 class="panel-title" style="display: inline;  font-weight: bold; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">Repo: {{repo}}<a type="button" class="btn btn-sm btn-default" style="float:right;" href="{{url}}{{repo}}" target="_blank"><span class="glyphicon glyphicon-edit"></span>View website</a></h3>
                 </div>
                 <div class="panel-body" style="background-color: #ceffeb;">
                     <div class="text-center">
@@ -63,6 +63,29 @@
                     <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/edit-datasheet/{{repo}}"><span class="glyphicon glyphicon-edit" ></span> Edit Purpose</a>
                     <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/edit-subsetfeature/{{repo}}"><span class="glyphicon glyphicon-edit"></span> Edit Statistics</a>
                     <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="/new-keywords/{{repo}}/1"><span class="glyphicon glyphicon-edit"></span> Edit Keywords</a>
+                  </div>
+                </div>
+            </div>
+        </div>
+        
+    {% endfor %}
+
+  </div> 
+  <hr>
+  <h3>Created by others</h3>
+  <div class="row">
+    {% for repo in watch_list %}
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading" style="background-color: #b2d1c5; border: 0px; padding-bottom: 20px;">
+                <h3 class="panel-title" style="display: inline;  font-weight: bold; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif">Repo: {{repo}} </h3>
+                </div>
+                <div class="panel-body" style="background-color: #ceffeb;">
+                    <div class="text-center">
+                        <!--<p style="font-size: 16px;">Repo: {{repo}}</p>-->
+                        <br>
+                    <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="{{repo_url}}{{repo}}" target="_blank"><span class="glyphicon glyphicon-edit"></span> View on GitHub</a>
+                    <a type="button" class="btn btn-md btn-default" style="margin:10px;" href="{{url}}{{repo}}" target="_blank"><span class="glyphicon glyphicon-edit" ></span> View Website</a> 
                   </div>
                 </div>
             </div>

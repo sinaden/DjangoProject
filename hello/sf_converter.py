@@ -65,8 +65,29 @@ class SFConverter():
             feature_element.append(new_element)
             
         features.append(feature_element)
-    
+
+    def validate_structure(self):
+        q = self.main_root.find("Subset_Feature_Dataset")
+        subs = list(q)
+        print("should type the categories") 
+        items_pattern = ["ID", "Name", "LastUpdate", "Modality", "Format", "Size",
+                        "ParentID", "Purpose","Link","Covmat","Modsys","Features"]
+        numsubs = len(subs)
+        print(subs)
+        for i in range(0, numsubs):
+            if subs[i].tag != "Subset_" + str(i + 1):
+                return "Subset ID Error"
+            items = list(subs[i])
+            for j in range(0,len(items)):
+                if items_pattern[j] != items[j].tag:
+                    return "Structure Validation Error"
+        return "Valid"
+
     def save(self):
+        result = self.validate_structure()
+        if result != "Valid":
+            return result
+
         tree = ET.ElementTree(self.main_root)
         self.indent(self.main_root)
         file_name = "feature_description.xml".format(title = self.name)
